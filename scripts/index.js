@@ -4,6 +4,7 @@ window.onload = function(){
     hex = Math.floor(Math.random()*16777215).toString(16);
     $("body").css("background-color",`#${hex}`);
     $("h1").css("color",`#${hex}`);
+    
 
 }; 
 
@@ -42,30 +43,62 @@ $(document).keyup(function(event) {
 
         // move to next line and do shiz. 
         if (row != 6) {
-            document.getElementsByName(`r${parseInt(row) + 1}c1`)[0].focus();
-
-            //this is for fun.
-            for (let i = 1; i <= 6; i++) {
-                let name = `r${row}c${i}`
-                document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
-                if (Math.random() >= 0.5) {
-                    document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
-                }
-                if (Math.random() >= 0.5) {
-                    document.getElementsByName(name)[0].style.backgroundColor = '#fceea7';
-                }
-                
-                // elem
-            }
-
+            document.getElementsByName(`r${parseInt(row) + 1}c1`)[0].focus();          
             // TODO: shiz
-        } else { // check if won?
+        }
 
+        // color letters
+        let greenCount = 0;
+        for (let i = 1; i <= 6; i++) {
+            let name = `r${row}c${i}`
+            console.log('yoyoyoy', input);
+            let p = i - 1; // this is ugly get charAt to work later...
+            console.log(name, hex.toLowerCase().charAt(i - 1), input.toLowerCase()[p] );
+            if (hex.toLowerCase().charAt(i - 1) === input.toLowerCase()[p]) { // green!
+                greenCount++;
+                document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
+            } else if (hex.toLowerCase().includes(input.toLowerCase()   .charAt(i-1), 0)) { // yellow!
+                document.getElementsByName(name)[0].style.backgroundColor = '#fceea7';
+            } else { // RED!!
+                document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
+            }
+            //this is for fun.
+            // document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
+            // if (Math.random() >= 0.5) {
+            //     document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
+            // }
+            // if (Math.random() >= 0.5) {
+            //     document.getElementsByName(name)[0].style.backgroundColor = '#fceea7';
+            // }
+            
+            // elem
+
+            // $(`input[name=${`r${row + 1}c${i}`}]`).attr("disabled", "disabled");
+            document.getElementsByName(name).readOnly = true;
+
+        }
+
+        if (greenCount == 6) { // weiner weiner ckn dinnner
+            alert("YOU ARE AWESOME! And a Weiner");
+            // lockFollowingRows(row);
         }
         console.log(event.target.name);
         // alert('Enter is pressed!');
     }
-});     
+});
+
+function lockFollowingRows(prevRow) {
+    console.log("prev", prevRow);
+    if(prevRow === 6) { return; }
+
+    for (let i = 1; i <= 6; i++) {
+        let name = `r${prevRow + 1}c${i}`
+        $(`input[name=${name}]`).attr("disabled", "disabled");
+        // document.getElementsByName(name).attr("disabled", "disabled"); 
+    }
+
+    // lockFollowingRows(prevRow + 2);
+}
 
 // any key pressed other than backspace and enter
 $(document).keyup(function(event) {
