@@ -1,16 +1,27 @@
 var hex;
+var ROWS = 5;
+var COLS = 6;
+var shareRef = new Array(ROWS);
 window.onload = function(){
     // window.x = document.myForm.myInput;
     hex = Math.floor(Math.random()*16777215).toString(16);
     $("body").css("background-color",`#${hex}`);
     $("h1").css("color",`#${hex}`);
 
+    // dissable all but first row
     for (let j = 2; j <= 5; j++) {
         for (let i = 0; i <= 6; i++) {
             $(`input[name=r${j}c${i}]`).prop( "disabled", true );
         }
     }
     
+    // fill up shareRef arry.
+    for (var i = 0; i < ROWS ; i++) {
+        shareRef[i] = new Array(COLS); // make each element an array
+        for (let j = 0; j < COLS; j++) {
+            shareRef[i][j] = "-";
+        }
+    }
 
     
 
@@ -69,10 +80,13 @@ $(document).keyup(function(event) {
             if (hex.toLowerCase().charAt(i - 1) === input.toLowerCase()[p]) { // green!
                 greenCount++;
                 document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
+                shareRef[row - 1][i - 1] = "G";
             } else if (hex.toLowerCase().includes(input.toLowerCase().charAt(i-1), 0)) { // yellow!
                 document.getElementsByName(name)[0].style.backgroundColor = '#fceea7';
+                shareRef[row - 1][i - 1] = "Y";
             } else { // RED!!
                 document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
+                shareRef[row - 1][i - 1] = "R";
             }
             //this is for fun.
             // document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
@@ -159,3 +173,47 @@ $(document).keyup(function(event) {
         // alert('Enter is pressed!');
     }
 });
+
+// 🟥 🟧 🟨 🟩 ⬜ White Square 
+function share() {
+    let str = "";
+    for (let i = 1; i < 5; i++) {
+        for (let j = 0; j < 6; j++) {
+            if (shareRef[i][j] === "G") {
+                console.log("green");
+                str += "&#129001";
+            } else if (shareRef[i][j] === "Y") {
+                console.log("yellow");
+
+                str += "🟨";
+            } else if (shareRef[i][j] === "R") {
+                console.log("red");
+
+                str += "🟥";
+            } else if (shareRef[i][j] === "-") {
+                console.log("w");
+
+                str += "⬜";
+            } 
+
+            // if (j === 6) {
+            //     str += "\n";
+            // }
+            // console.log(str);
+        }
+    }
+    copyToClipboard(str);
+}
+
+function copyToClipboard(text) {
+    var dummy = document.createElement("textarea");
+    // to avoid breaking orgain page when copying more words
+    // cant copy when adding below this code
+    // dummy.style.display = 'none'
+    document.body.appendChild(dummy);
+    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+}
