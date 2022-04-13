@@ -1,6 +1,14 @@
-var hex;
+var hex; // = 874f4e; // fun color c25f45
 var ROWS = 5;
 var COLS = 6;
+
+var SHIFT_KEY = 16;
+var LEFT_ARROW_KEY = 37;
+var RIGHT_ARROW_KEY = 39;
+var ENTER_KEY = 13;
+var BACKSPACE_KEY = 8;
+var DELETE_KEY = 46;
+
 var shareRef = new Array(ROWS);
 window.onload = function(){
     // window.x = document.myForm.myInput;
@@ -22,20 +30,15 @@ window.onload = function(){
             shareRef[i][j] = "-";
         }
     }
-
-    
-
 }; 
 
 // enter key pressed
 $(document).keyup(function(event) {
-    if (event.which === 13) {
+    if (event.which === ENTER_KEY) {
         // check if its the last letter if so check and submit
         const row = event.target.name.charAt(1);
 
-        for (let m = 0; m <= 6; m++) {
-            $(`input[name=r${parseInt(row) + 1}c${m}]`).prop( "disabled", false );
-        }
+
         // const col = event.target.name.charAt(3);
         let valid = true;
         let input = "";
@@ -64,6 +67,11 @@ $(document).keyup(function(event) {
             return;
         }
 
+        // if valid then unlock the next row.
+        for (let m = 0; m <= 6; m++) {
+            $(`input[name=r${parseInt(row) + 1}c${m}]`).prop( "disabled", false );
+        }
+
         // move to next line and do shiz. 
         if (row != 5) {
             document.getElementsByName(`r${parseInt(row) + 1}c1`)[0].focus();          
@@ -82,7 +90,7 @@ $(document).keyup(function(event) {
                 document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
                 shareRef[row - 1][i - 1] = "G";
             } else if (hex.toLowerCase().includes(input.toLowerCase().charAt(i-1), 0)) { // yellow!
-                document.getElementsByName(name)[0].style.backgroundColor = '#fceea7';
+                document.getElementsByName(name)[0].style.backgroundColor = '#eed052'; //'#fceea7';
                 shareRef[row - 1][i - 1] = "Y";
             } else { // RED!!
                 document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
@@ -134,7 +142,9 @@ function lockFollowingRows(prevRow) {
 
 // any key pressed other than backspace and enter
 $(document).keyup(function(event) {
-    if (event.which != 13 || event.which != 8 || event.which != 46) {
+    if (event.which != ENTER_KEY && event.which != SHIFT_KEY &&
+        event.which != BACKSPACE_KEY && event.which != DELETE_KEY &&
+        event.which != LEFT_ARROW_KEY && event.which != RIGHT_ARROW_KEY) {
         // check if its the last letter if so check and submit
         const rowStr = event.target.name.substring(0, event.target.name.length - 1);
         const last = event.target.name.charAt(event.target.name.length - 1);
@@ -152,19 +162,44 @@ $(document).keyup(function(event) {
     }
 });
 
-//backsapce on empyt text box!
+
 $(document).keyup(function(event) {
-    console.log("made it here!", event.keyCode);
-    if (event.keyCode == 8 ) {
-    console.log("made it here!2 ");        
+    if (event.which === LEFT_ARROW_KEY) {
         const rowStr = event.target.name.substring(0, event.target.name.length - 1);
         const last = event.target.name.charAt(event.target.name.length - 1);
 
-        if (last == 1 || last == 6) {return;} // we include 6 for now :_)
+        if (last == 1) {return;}
+
+        document.getElementsByName(rowStr + (parseInt(last) - 1))[0].focus();
+    }
+
+    if (event.which === RIGHT_ARROW_KEY) {
+        const rowStr = event.target.name.substring(0, event.target.name.length - 1);
+        const last = event.target.name.charAt(event.target.name.length - 1);
+
+        if (last == 6) {return;}
+
+        document.getElementsByName(rowStr + (parseInt(last) + 1))[0].focus();
+    }
+});
+
+//backsapce on empyt text box!
+$(document).keydown(function(event) {
+    console.log("made it here!", event.keyCode);
+    if (event.keyCode == BACKSPACE_KEY) {
+    console.log("made it here!2 ");        
+        const rowStr = event.target.name.substring(0, event.target.name.length - 1);
+        const last = event.target.name.charAt(event.target.name.length - 1);
+        
+        // console.log("backspace ", event.target.value , "<- val")
+
+        if (last == 1) {return;} // we include 6 for now :_)
 
         // const name = `[name="${rowStr}${parseInt(last) + 1}]`;
-        console.log(document.getElementsByName(rowStr + ((parseInt(last) - 1)))[0].value = "" ); 
-        document.getElementsByName(rowStr + ((parseInt(last) - 1)))[0].focus();
+        if (!event.target.value) {  
+            console.log(document.getElementsByName(rowStr + ((parseInt(last) - 1)))[0].value = "" ); 
+            document.getElementsByName(rowStr + ((parseInt(last) - 1)))[0].focus();
+        }
 
         // $(name).focus();
         // console.log("focused!!!", rowStr, last, name);
