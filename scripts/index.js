@@ -8,6 +8,7 @@ var RIGHT_ARROW_KEY = 39;
 var ENTER_KEY = 13;
 var BACKSPACE_KEY = 8;
 var DELETE_KEY = 46;
+var TAB_KEY = 9;
 
 var shareRef = new Array(ROWS);
 window.onload = function(){
@@ -82,9 +83,17 @@ $(document).keyup(function(event) {
         let greenCount = 0;
         for (let i = 1; i <= 6; i++) {
             let name = `r${row}c${i}`
+            let usedName = `used${input.toUpperCase().charAt(i-1)}`;
             console.log('yoyoyoy', input);
             let p = i - 1; // this is ugly get charAt to work later...
             console.log(name, hex.toLowerCase().charAt(i - 1), input.toLowerCase()[p] );
+            
+            // Grey out what charcter was used!
+            // document.getElementsByName(usedName)[0].style.backgroundColor = '#717171';
+            document.getElementsByName(usedName)[0].style.color = '#545454'; //#707070
+            document.getElementsByName(usedName)[0].style.border = "#808080 2px solid";
+
+
             if (hex.toLowerCase().charAt(i - 1) === input.toLowerCase()[p]) { // green!
                 greenCount++;
                 document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
@@ -144,7 +153,8 @@ function lockFollowingRows(prevRow) {
 $(document).keyup(function(event) {
     if (event.which != ENTER_KEY && event.which != SHIFT_KEY &&
         event.which != BACKSPACE_KEY && event.which != DELETE_KEY &&
-        event.which != LEFT_ARROW_KEY && event.which != RIGHT_ARROW_KEY) {
+        event.which != LEFT_ARROW_KEY && event.which != RIGHT_ARROW_KEY &&
+        event.which != TAB_KEY) {
         // check if its the last letter if so check and submit
         const rowStr = event.target.name.substring(0, event.target.name.length - 1);
         const last = event.target.name.charAt(event.target.name.length - 1);
