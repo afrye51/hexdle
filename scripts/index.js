@@ -97,12 +97,18 @@ $(document).keyup(function(event) {
             if (hex.toLowerCase().charAt(i - 1) === input.toLowerCase()[p]) { // green!
                 greenCount++;
                 document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
+                document.getElementsByName(usedName)[0].style.backgroundColor = '#44aa5c52';
+
                 shareRef[row - 1][i - 1] = "G";
             } else if (hex.toLowerCase().includes(input.toLowerCase().charAt(i-1), 0)) { // yellow!
                 document.getElementsByName(name)[0].style.backgroundColor = '#eed052'; //'#fceea7';
+                document.getElementsByName(usedName)[0].style.backgroundColor = '#eed05252';
+
                 shareRef[row - 1][i - 1] = "Y";
             } else { // RED!!
                 document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
+                document.getElementsByName(usedName)[0].style.backgroundColor = '#AA4A4452';
+
                 shareRef[row - 1][i - 1] = "R";
             }
             //this is for fun.
