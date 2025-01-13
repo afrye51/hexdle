@@ -105,7 +105,7 @@ $(document).keyup(function(event) {
                 document.getElementsByName(usedName)[0].style.backgroundColor = '#44aa5c52';
 
                 shareRef[row - 1][i - 1] = "G";
-                letter_list = letter_list.replaceAt(p, "G")
+                letter_list = letter_list.replaceAt(p, "Z")
             } else if (hex.toLowerCase().includes(input.toLowerCase().charAt(i-1), 0)) { // yellow!
                 document.getElementsByName(name)[0].style.backgroundColor = '#eed052'; //'#fceea7';
                 document.getElementsByName(usedName)[0].style.backgroundColor = '#eed05252';
@@ -141,7 +141,7 @@ $(document).keyup(function(event) {
                 document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
                 document.getElementsByName(usedName)[0].style.backgroundColor = '#AA4A4452';
 
-                letter_list = letter_list.replaceAt(p, "G")
+                letter_list = letter_list.replaceAt(p, "Z")
                 shareRef[row - 1][i - 1] = "R";
             }
             
