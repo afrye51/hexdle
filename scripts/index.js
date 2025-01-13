@@ -33,6 +33,11 @@ window.onload = function(){
     }
 }; 
 
+// By user cem-kalyoncu from https://stackoverflow.com/questions/1431094/how-do-i-replace-a-character-at-a-specific-index-in-javascript
+String.prototype.replaceAt = function(index, replacement) {
+    return this.substring(0, index) + replacement + this.substring(index + replacement.length);
+}
+
 // enter key pressed
 $(document).keyup(function(event) {
     if (event.which === ENTER_KEY) {
@@ -81,6 +86,7 @@ $(document).keyup(function(event) {
 
         // color letters
         let greenCount = 0;
+        let letter_list = hex;
         for (let i = 1; i <= 6; i++) {
             let name = `r${row}c${i}`
             let usedName = `used${input.toUpperCase().charAt(i-1)}`;
@@ -93,13 +99,13 @@ $(document).keyup(function(event) {
             document.getElementsByName(usedName)[0].style.color = '#545454'; //#707070
             document.getElementsByName(usedName)[0].style.border = "#808080 2px solid";
 
-
             if (hex.toLowerCase().charAt(i - 1) === input.toLowerCase()[p]) { // green!
                 greenCount++;
                 document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
                 document.getElementsByName(usedName)[0].style.backgroundColor = '#44aa5c52';
 
                 shareRef[row - 1][i - 1] = "G";
+                letter_list = letter_list.replaceAt(p, "G")
             } else if (hex.toLowerCase().includes(input.toLowerCase().charAt(i-1), 0)) { // yellow!
                 document.getElementsByName(name)[0].style.backgroundColor = '#eed052'; //'#fceea7';
                 document.getElementsByName(usedName)[0].style.backgroundColor = '#eed05252';
@@ -123,12 +129,28 @@ $(document).keyup(function(event) {
             // elem
 
             // $(`input[name=${`r${row + 1}c${i}`}]`).prop( "disabled", true );
+        }
+
+        for (let i = 1; i <= 6; i++) {
+            let name = `r${row}c${i}`
+            let usedName = `used${input.toUpperCase().charAt(i-1)}`;
+            let p = i - 1; // this is ugly get charAt to work later...
+
+            if (shareRef[row - 1][i - 1] == "Y" && 
+                letter_list.toLowerCase().includes(input.toLowerCase().charAt(p), 0)) { // RED!!
+                document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
+                document.getElementsByName(usedName)[0].style.backgroundColor = '#AA4A4452';
+
+                letter_list = letter_list.replaceAt(p, "G")
+                shareRef[row - 1][i - 1] = "R";
+            }
+            
+            // $(`input[name=${`r${row + 1}c${i}`}]`).prop( "disabled", true );
             console.log("yooo", `input[name=r${row+1}c${i}]`);
             $(`input[name=r${parseInt(row)}c${i}]`).prop( "disabled", true );
             
             // $(`input[name=${`r3c1`}]`).prop( "disabled", true );
             document.getElementsByName(name).readOnly = true;
-
         }
 
         if (greenCount == 6) { // weiner weiner ckn dinnner
