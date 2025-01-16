@@ -132,7 +132,6 @@ $(document).keyup(function(event) {
                 if (!letterList.toLowerCase().includes(input.toLowerCase().charAt(p), 0)) 
                 {
                     document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
-                    document.getElementsByName(usedName)[0].style.backgroundColor = '#AA4A4452';
 
                     shareRef[row - 1][i - 1] = "R";
                 }
