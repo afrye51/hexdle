@@ -1,5 +1,5 @@
-var hex; // = 874f4e; // fun color c25f45
-var ROWS = 5;
+var hex; //874f4e // fun color c25f45
+var ROWS = 6;
 var COLS = 6;
 
 var SHIFT_KEY = 16;
@@ -13,7 +13,8 @@ var TAB_KEY = 9;
 var shareRef = new Array(ROWS);
 window.onload = function(){
     // window.x = document.myForm.myInput;
-    hex = Math.floor(Math.random()*16777215).toString(16);
+    hex = Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    // hex = 0xc25f45.toString(16).padStart(6, '0');
     $("body").css("background-color",`#${hex}`);
     $("h1").css("color",`#${hex}`);
 
@@ -32,6 +33,11 @@ window.onload = function(){
         }
     }
 }; 
+
+// By user cem-kalyoncu from https://stackoverflow.com/questions/1431094/how-do-i-replace-a-character-at-a-specific-index-in-javascript
+String.prototype.replaceAt = function(index, replacement) {
+    return this.substring(0, index) + replacement + this.substring(index + replacement.length);
+}
 
 // enter key pressed
 $(document).keyup(function(event) {
@@ -81,6 +87,7 @@ $(document).keyup(function(event) {
 
         // color letters
         let greenCount = 0;
+        let letterList = hex;
         for (let i = 1; i <= 6; i++) {
             let name = `r${row}c${i}`
             let usedName = `used${input.toUpperCase().charAt(i-1)}`;
@@ -93,13 +100,13 @@ $(document).keyup(function(event) {
             document.getElementsByName(usedName)[0].style.color = '#545454'; //#707070
             document.getElementsByName(usedName)[0].style.border = "#808080 2px solid";
 
-
             if (hex.toLowerCase().charAt(i - 1) === input.toLowerCase()[p]) { // green!
                 greenCount++;
                 document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
                 document.getElementsByName(usedName)[0].style.backgroundColor = '#44aa5c52';
 
                 shareRef[row - 1][i - 1] = "G";
+                letterList = letterList.replaceAt(p, "Z")
             } else if (hex.toLowerCase().includes(input.toLowerCase().charAt(i-1), 0)) { // yellow!
                 document.getElementsByName(name)[0].style.backgroundColor = '#eed052'; //'#fceea7';
                 document.getElementsByName(usedName)[0].style.backgroundColor = '#eed05252';
@@ -111,24 +118,36 @@ $(document).keyup(function(event) {
 
                 shareRef[row - 1][i - 1] = "R";
             }
-            //this is for fun.
-            // document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
-            // if (Math.random() >= 0.5) {
-            //     document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
-            // }
-            // if (Math.random() >= 0.5) {
-            //     document.getElementsByName(name)[0].style.backgroundColor = '#fceea7';
-            // }
-            
-            // elem
+        }
 
+        for (let i = 1; i <= 6; i++) {
+            let name = `r${row}c${i}`
+            let usedName = `used${input.toUpperCase().charAt(i-1)}`;
+            let p = i - 1; // this is ugly get charAt to work later...
+
+            let bool_yellow = shareRef[row - 1][i - 1] == "Y";
+            let bool_list = !(letterList.toLowerCase().includes(input.toLowerCase().charAt(p), 0));
+            if (shareRef[row - 1][i - 1] == "Y")
+            {
+                if (!letterList.toLowerCase().includes(input.toLowerCase().charAt(p), 0)) 
+                {
+                    document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
+                    document.getElementsByName(usedName)[0].style.backgroundColor = '#AA4A4452';
+
+                    shareRef[row - 1][i - 1] = "R";
+                }
+                else
+                {
+                    letterList = letterList.replaceAt(letterList.indexOf(input.toLowerCase().charAt(p)), "Z")
+                }
+            }
+            
             // $(`input[name=${`r${row + 1}c${i}`}]`).prop( "disabled", true );
             console.log("yooo", `input[name=r${row+1}c${i}]`);
             $(`input[name=r${parseInt(row)}c${i}]`).prop( "disabled", true );
             
             // $(`input[name=${`r3c1`}]`).prop( "disabled", true );
             document.getElementsByName(name).readOnly = true;
-
         }
 
         if (greenCount == 6) { // weiner weiner ckn dinnner
@@ -246,11 +265,6 @@ function share() {
 
                 str += "⬜";
             } 
-
-            // if (j === 6) {
-            //     str += "\n";
-            // }
-            // console.log(str);
         }
     }
     copyToClipboard(str);
