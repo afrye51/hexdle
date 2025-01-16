@@ -1,4 +1,4 @@
-var hex; // = 874f4e; // fun color c25f45
+var hex; //874f4e // fun color c25f45
 var ROWS = 6;
 var COLS = 6;
 
@@ -13,7 +13,8 @@ var TAB_KEY = 9;
 var shareRef = new Array(ROWS);
 window.onload = function(){
     // window.x = document.myForm.myInput;
-    hex = Math.floor(Math.random()*16777215).toString(16);
+    hex = Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    // hex = 0xc25f45.toString(16).padStart(6, '0');
     $("body").css("background-color",`#${hex}`);
     $("h1").css("color",`#${hex}`);
 
@@ -117,18 +118,6 @@ $(document).keyup(function(event) {
 
                 shareRef[row - 1][i - 1] = "R";
             }
-            //this is for fun.
-            // document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
-            // if (Math.random() >= 0.5) {
-            //     document.getElementsByName(name)[0].style.backgroundColor = '#44aa5c';
-            // }
-            // if (Math.random() >= 0.5) {
-            //     document.getElementsByName(name)[0].style.backgroundColor = '#fceea7';
-            // }
-            
-            // elem
-
-            // $(`input[name=${`r${row + 1}c${i}`}]`).prop( "disabled", true );
         }
 
         for (let i = 1; i <= 6; i++) {
@@ -136,13 +125,21 @@ $(document).keyup(function(event) {
             let usedName = `used${input.toUpperCase().charAt(i-1)}`;
             let p = i - 1; // this is ugly get charAt to work later...
 
-            if (shareRef[row - 1][i - 1] == "Y" && 
-                letterList.toLowerCase().includes(input.toLowerCase().charAt(p), 0)) { // RED!!
-                document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
-                document.getElementsByName(usedName)[0].style.backgroundColor = '#AA4A4452';
+            let bool_yellow = shareRef[row - 1][i - 1] == "Y";
+            let bool_list = !(letterList.toLowerCase().includes(input.toLowerCase().charAt(p), 0));
+            if (shareRef[row - 1][i - 1] == "Y")
+            {
+                if (!letterList.toLowerCase().includes(input.toLowerCase().charAt(p), 0)) 
+                {
+                    document.getElementsByName(name)[0].style.backgroundColor = '#AA4A44';
+                    document.getElementsByName(usedName)[0].style.backgroundColor = '#AA4A4452';
 
-                letterList = letterList.replaceAt(p, "Z")
-                shareRef[row - 1][i - 1] = "R";
+                    shareRef[row - 1][i - 1] = "R";
+                }
+                else
+                {
+                    letterList = letterList.replaceAt(letterList.indexOf(input.toLowerCase().charAt(p)), "Z")
+                }
             }
             
             // $(`input[name=${`r${row + 1}c${i}`}]`).prop( "disabled", true );
@@ -268,11 +265,6 @@ function share() {
 
                 str += "⬜";
             } 
-
-            // if (j === 6) {
-            //     str += "\n";
-            // }
-            // console.log(str);
         }
     }
     copyToClipboard(str);

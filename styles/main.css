@@ -1,6 +1,7 @@
 body {
     font-family: 'Rubik', Arial, Helvetica, Georgia, sans-serif;
     /* background-color: aqua; */
+    overflow-x: auto;
 }
 
 h1 {
@@ -18,7 +19,9 @@ h1 {
     /* width: 70%; */
     width: 60%;
     max-width: 768px;
-
+    min-width: 725px;
+    padding-left: 100px;
+    padding-right: 50px;
 }
 
 .card {
