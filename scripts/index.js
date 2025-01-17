@@ -1,5 +1,5 @@
 var hex; //874f4e // fun color c25f45
-var ROWS = 6;
+var ROWS = 5;
 var COLS = 6;
 
 var SHIFT_KEY = 16;
@@ -85,7 +85,7 @@ $(document).keyup(function(event) {
             // TODO: shiz
         }
 
-        // color letters
+        // color letters (first run does not properly handle duplicate yellows)
         let greenCount = 0;
         let letterList = hex;
         for (let i = 1; i <= 6; i++) {
@@ -120,13 +120,13 @@ $(document).keyup(function(event) {
             }
         }
 
+        // Fix duplicate yellows
+        // Create a list of all letters (letterList) in the answer, then remove green letters. 
+        // Step through left to right and leave the correct number of instances of each letter yellow. Mark any additional as red. 
         for (let i = 1; i <= 6; i++) {
             let name = `r${row}c${i}`
-            let usedName = `used${input.toUpperCase().charAt(i-1)}`;
             let p = i - 1; // this is ugly get charAt to work later...
 
-            let bool_yellow = shareRef[row - 1][i - 1] == "Y";
-            let bool_list = !(letterList.toLowerCase().includes(input.toLowerCase().charAt(p), 0));
             if (shareRef[row - 1][i - 1] == "Y")
             {
                 if (!letterList.toLowerCase().includes(input.toLowerCase().charAt(p), 0)) 
